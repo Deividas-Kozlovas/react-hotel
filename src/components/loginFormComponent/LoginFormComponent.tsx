@@ -4,6 +4,7 @@ import { useUserContext } from "../../context/UserContext";
 const LoginFormComponent = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const { state, loginUser } = useUserContext();
+
   const handleChange = (event: { target: { name: string; value: string } }) => {
     const { name, value } = event.target;
     setFormData((prevData) => ({

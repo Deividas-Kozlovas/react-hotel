@@ -1,11 +1,19 @@
+import axiosInstance from "./axiosInstance";
+import { isAxiosError } from "axios";
+
 export const login = async (email: string, password: string) => {
-  const response = await fetch("http://localhost:3000/api/v1/user/login", {
-    method: "POST",
-    body: JSON.stringify({ email, password }),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  const data = await response.json();
-  return data;
+  try {
+    const response = await axiosInstance.post("/user/login", {
+      email,
+      password,
+    });
+    return response.data;
+  } catch (error) {
+    if (isAxiosError(error)) {
+      console.error("Axios error:", error.response?.data || error.message);
+    } else {
+      console.error("Unexpected error:", error);
+    }
+    throw error;
+  }
 };
