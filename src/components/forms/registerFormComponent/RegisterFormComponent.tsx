@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useUserContext } from "../../../context/UserContext";
 import "../formStyling.scss";
+import { Link } from "react-router-dom";
+import { ClipLoader } from "react-spinners";
 
 const RegisterFormComponent = () => {
   const { state, userRegister } = useUserContext();
@@ -71,7 +73,11 @@ const RegisterFormComponent = () => {
         >
           {state.loading ? "Registering..." : "Register"}
         </button>
+        <Link className="auth-form__switch" to="/login">
+          login
+        </Link>
         {state.error && <p className="auth-form__error">{state.error}</p>}
+        {state.loading && <ClipLoader size={50} color="#007bff" />}
       </form>
     </div>
   );

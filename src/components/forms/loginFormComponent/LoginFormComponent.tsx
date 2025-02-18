@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useUserContext } from "../../../context/UserContext";
 import "../formStyling.scss";
+import { Link } from "react-router-dom";
+import { ClipLoader } from "react-spinners";
 
 interface FormData {
   email: string;
@@ -53,7 +55,11 @@ const LoginFormComponent = () => {
         >
           {state.loading ? "Logging in..." : "Login"}
         </button>
+        <Link className="auth-form__switch" to="/register">
+          Register
+        </Link>
         {state.error && <p className="auth-form__error">{state.error}</p>}
+        {state.loading && <ClipLoader size={50} color="#007bff" />}
       </form>
     </div>
   );
