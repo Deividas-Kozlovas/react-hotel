@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, ReactNode, useContext, useReducer } from "react";
 import userReducer from "../reducer/userReducer";
-import { login } from "../services/authServices";
+import { login, register } from "../services/authServices";
 import {
   SET_USER,
   SET_LOADING,
@@ -22,6 +22,12 @@ const UserContext = createContext<{
   state: typeof initialState;
   dispatch: React.Dispatch<UserAction>;
   loginUser: (email: string, password: string) => Promise<void>;
+  userRegister: (
+    name: string,
+    email: string,
+    password: string,
+    passwordConfirm: string
+  ) => Promise<void>;
 } | null>(null);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
@@ -47,8 +53,33 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const userRegister = async (
+    name: string,
+    email: string,
+    password: string,
+    passwordConfirm: string
+  ) => {
+    try {
+      dispatch({ type: SET_LOADING });
+      const response = await register(name, email, password, passwordConfirm);
+
+      if (response.state === "Success") {
+        dispatch({
+          type: SET_USER,
+          payload: { user: response.data, token: response.token },
+        });
+      } else {
+        dispatch({ type: SET_ERROR, payload: response.message });
+      }
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Register failed. Try again.";
+      dispatch({ type: SET_ERROR, payload: errorMessage });
+    }
+  };
+
   return (
-    <UserContext.Provider value={{ state, dispatch, loginUser }}>
+    <UserContext.Provider value={{ state, dispatch, loginUser, userRegister }}>
       {children}
     </UserContext.Provider>
   );
