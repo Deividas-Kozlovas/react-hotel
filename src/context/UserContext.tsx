@@ -1,5 +1,11 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, ReactNode, useContext, useReducer } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useReducer,
+} from "react";
 import userReducer from "../reducer/userReducer";
 import { login, register } from "../services/authServices";
 import {
@@ -39,6 +45,8 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       const response = await login(email, password);
 
       if (response.status === "Success") {
+        localStorage.setItem("token", response.token);
+
         dispatch({
           type: SET_USER,
           payload: { user: response.data, token: response.token },
@@ -53,6 +61,19 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      dispatch({
+        type: SET_USER,
+        payload: {
+          token,
+          user: { id: "", name: "", email: "" },
+        },
+      });
+    }
+  }, []);
+
   const userRegister = async (
     name: string,
     email: string,
@@ -64,6 +85,8 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       const response = await register(name, email, password, passwordConfirm);
 
       if (response.status === "Success") {
+        localStorage.setItem("token", response.token);
+
         dispatch({
           type: SET_USER,
           payload: { user: response.data, token: response.token },
