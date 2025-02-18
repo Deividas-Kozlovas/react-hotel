@@ -1,0 +1,29 @@
+/* Reset default styles for all elements, including body and html */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%; /* Full height for body */
+  width: 100%; /* Full width for body */
+  overflow: hidden; /* Prevents horizontal overflow */
+}
+
+.auth-form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Full viewport height */
+  margin: 0; /* Removes any margin */
+  padding: 0; /* Removes any padding */
+  background: linear-gradient(
+    to bottom,
+    #b3e0ff,
+    #4c74e6
+  ); /* Gradient background */
+}

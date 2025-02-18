@@ -63,7 +63,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       dispatch({ type: SET_LOADING });
       const response = await register(name, email, password, passwordConfirm);
 
-      if (response.state === "Success") {
+      if (response.status === "Success") {
         dispatch({
           type: SET_USER,
           payload: { user: response.data, token: response.token },

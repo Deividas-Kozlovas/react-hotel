@@ -1,12 +1,15 @@
-import LoginFormComponent from "../../components/loginFormComponent/LoginFormComponent";
-import RegisterFormComponent from "../../components/registerFormComponent/RegisterFormComponent";
+import { Navigate } from "react-router-dom";
+import { useUserContext } from "../../context/UserContext";
 
 const HomePage = () => {
-  return (
+  const { state } = useUserContext();
+
+  return state.token ? (
     <div>
-      <LoginFormComponent />
-      <RegisterFormComponent />
+      <div>homepage</div>
     </div>
+  ) : (
+    <Navigate to="/login" replace />
   );
 };
 

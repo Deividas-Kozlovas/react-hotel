@@ -56,7 +56,6 @@ export const register = async (
       throw new Error("Passwords do not match");
     }
 
-    // Corrected the route here
     const response = await axiosInstance.post("/user/signup", {
       name,
       email,

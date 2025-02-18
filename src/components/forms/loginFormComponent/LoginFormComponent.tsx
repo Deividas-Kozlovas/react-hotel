@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { useUserContext } from "../../context/UserContext";
+import { useUserContext } from "../../../context/UserContext";
+import "../formStyling.scss";
 
 interface FormData {
   email: string;
@@ -27,14 +28,15 @@ const LoginFormComponent = () => {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
+    <div className="auth-form-container">
+      <form className="auth-form" onSubmit={handleSubmit}>
         <input
           type="email"
           name="email"
           value={formData.email}
           onChange={handleChange}
           placeholder="Email"
+          className="auth-form__input"
         />
         <input
           type="password"
@@ -42,12 +44,17 @@ const LoginFormComponent = () => {
           value={formData.password}
           onChange={handleChange}
           placeholder="Password"
+          className="auth-form__input"
         />
-        <button type="submit" disabled={state.loading}>
+        <button
+          type="submit"
+          className="auth-form__button"
+          disabled={state.loading}
+        >
           {state.loading ? "Logging in..." : "Login"}
         </button>
+        {state.error && <p className="auth-form__error">{state.error}</p>}
       </form>
-      {state.error && <p>{state.error}</p>}
     </div>
   );
 };
