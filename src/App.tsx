@@ -1,15 +1,23 @@
-import { Route, Routes, BrowserRouter as Router } from "react-router-dom";
+import {
+  Route,
+  Routes,
+  BrowserRouter as Router,
+  useLocation,
+} from "react-router-dom";
 import "./App.css";
 import RegisterFormComponent from "./components/forms/registerFormComponent/RegisterFormComponent";
 import LoginFormComponent from "./components/forms/loginFormComponent/LoginFormComponent";
 import HomePage from "./pages/home/HomePage";
 import { UserProvider } from "./context/UserContext";
-import RegisterLoginPage from "./pages/RegisterLogin/RegisterLoginPage"; // Ensure this path is correct
+import RegisterLoginPage from "./pages/RegisterLogin/RegisterLoginPage";
+import NavigationComponent from "./components/navigation/NavigationComponent";
+import "bootstrap/dist/css/bootstrap.min.css";
 
-function App() {
+const App = () => {
   return (
     <UserProvider>
       <Router>
+        <NavigationWithVisibility />
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route
@@ -28,6 +36,15 @@ function App() {
       </Router>
     </UserProvider>
   );
-}
+};
+
+const NavigationWithVisibility = () => {
+  const location = useLocation();
+
+  const shouldHideNavbar =
+    location.pathname === "/register" || location.pathname === "/login";
+
+  return <>{!shouldHideNavbar && <NavigationComponent />}</>;
+};
 
 export default App;
