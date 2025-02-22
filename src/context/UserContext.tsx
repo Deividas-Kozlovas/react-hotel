@@ -14,6 +14,7 @@ import {
   SET_ERROR,
   UserState,
   UserAction,
+  LOGOUT,
 } from "../actions/userActions";
 
 const initialState: UserState = {
@@ -34,10 +35,24 @@ const UserContext = createContext<{
     password: string,
     passwordConfirm: string
   ) => Promise<void>;
+  logout: () => void;
 } | null>(null);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(userReducer, initialState);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      dispatch({
+        type: SET_USER,
+        payload: {
+          token,
+          user: { id: "", name: "", email: "" },
+        },
+      });
+    }
+  }, []);
 
   const loginUser = async (email: string, password: string) => {
     try {
@@ -60,19 +75,6 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       dispatch({ type: SET_ERROR, payload: errorMessage });
     }
   };
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      dispatch({
-        type: SET_USER,
-        payload: {
-          token,
-          user: { id: "", name: "", email: "" },
-        },
-      });
-    }
-  }, []);
 
   const userRegister = async (
     name: string,
@@ -101,8 +103,15 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const logout = () => {
+    localStorage.removeItem("token");
+    dispatch({ type: LOGOUT });
+  };
+
   return (
-    <UserContext.Provider value={{ state, dispatch, loginUser, userRegister }}>
+    <UserContext.Provider
+      value={{ state, dispatch, loginUser, userRegister, logout }}
+    >
       {children}
     </UserContext.Provider>
   );
