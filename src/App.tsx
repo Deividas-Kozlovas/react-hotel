@@ -12,28 +12,31 @@ import { UserProvider } from "./context/UserContext";
 import RegisterLoginPage from "./pages/RegisterLogin/RegisterLoginPage";
 import NavigationComponent from "./components/navigation/NavigationComponent";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { RoomProvider } from "./context/RoomContext";
 
 const App = () => {
   return (
     <UserProvider>
-      <Router>
-        <NavigationWithVisibility />
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route
-            path="/register"
-            element={
-              <RegisterLoginPage RegisterLoginForm={RegisterFormComponent} />
-            }
-          />
-          <Route
-            path="/login"
-            element={
-              <RegisterLoginPage RegisterLoginForm={LoginFormComponent} />
-            }
-          />
-        </Routes>
-      </Router>
+      <RoomProvider>
+        <Router>
+          <NavigationWithVisibility />
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route
+              path="/register"
+              element={
+                <RegisterLoginPage RegisterLoginForm={RegisterFormComponent} />
+              }
+            />
+            <Route
+              path="/login"
+              element={
+                <RegisterLoginPage RegisterLoginForm={LoginFormComponent} />
+              }
+            />
+          </Routes>
+        </Router>
+      </RoomProvider>
     </UserProvider>
   );
 };
