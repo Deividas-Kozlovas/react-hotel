@@ -13,6 +13,7 @@ import RegisterLoginPage from "./pages/RegisterLogin/RegisterLoginPage";
 import NavigationComponent from "./components/navigation/NavigationComponent";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { RoomProvider } from "./context/RoomContext";
+import IndividualRoomComponent from "./components/individualRoom/individualRoom";
 
 const App = () => {
   return (
@@ -34,6 +35,7 @@ const App = () => {
                 <RegisterLoginPage RegisterLoginForm={LoginFormComponent} />
               }
             />
+            <Route path="/room/:id" element={<IndividualRoomComponent />} />
           </Routes>
         </Router>
       </RoomProvider>
