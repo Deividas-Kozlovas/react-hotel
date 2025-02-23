@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useRoomContext } from "../../context/RoomContext";
+import { Card, Button, Badge, Row, Col } from "react-bootstrap";
 
 const RoomCardComponent = () => {
   const { state } = useRoomContext();
@@ -14,58 +15,52 @@ const RoomCardComponent = () => {
   }
 
   return (
-    <div className="row g-4">
+    <Row className="g-4">
       {state.rooms.map((room) => (
-        <div key={room.id} className="col-md-6 col-lg-4">
-          <div className="card shadow-sm border-0">
-            <img
+        <Col key={room.id} md={6} lg={4}>
+          <Card className="shadow-sm border-0">
+            <Card.Img
+              variant="top"
               src={room.room_image}
-              className="card-img-top"
               alt={`Room ${room.number}`}
               style={{ height: "200px", objectFit: "cover" }}
             />
-            <div className="card-body">
-              <h5 className="card-title fw-bold">Room {room.number}</h5>
-              <p className="card-text mb-2">
+            <Card.Body>
+              <Card.Title className="fw-bold">Room {room.number}</Card.Title>
+              <Card.Text className="mb-2">
                 <span className="fw-semibold">Capacity:</span> {room.capacity}{" "}
                 guests <br />
                 <span className="fw-semibold">Floor:</span> {room.floor} <br />
                 <span className="fw-semibold">Price:</span> ${room.pricing} per
                 night
-              </p>
-              <p className="card-text">
+              </Card.Text>
+              <Card.Text>
                 <span className="fw-semibold">Amenities:</span> <br />
-                <span
-                  className={`badge ${room.wifi ? "bg-success" : "bg-danger"}`}
-                >
+                <Badge bg={room.wifi ? "success" : "danger"} className="me-2">
                   WiFi {room.wifi ? "Yes" : "No"}
-                </span>{" "}
-                <span
-                  className={`badge ${
-                    room.parking ? "bg-success" : "bg-danger"
-                  }`}
+                </Badge>
+                <Badge
+                  bg={room.parking ? "success" : "danger"}
+                  className="me-2"
                 >
                   Parking {room.parking ? "Yes" : "No"}
-                </span>{" "}
-                <span
-                  className={`badge ${
-                    room.breakfast ? "bg-success" : "bg-danger"
-                  }`}
-                >
+                </Badge>
+                <Badge bg={room.breakfast ? "success" : "danger"}>
                   Breakfast {room.breakfast ? "Yes" : "No"}
-                </span>
-              </p>
-              <button
-                className="btn btn-primary w-100"
+                </Badge>
+              </Card.Text>
+              <Button
+                variant="primary"
+                className="w-100"
                 onClick={() => navigate(`/room/${room.id}`)}
               >
                 Book Now
-              </button>
-            </div>
-          </div>
-        </div>
+              </Button>
+            </Card.Body>
+          </Card>
+        </Col>
       ))}
-    </div>
+    </Row>
   );
 };
 

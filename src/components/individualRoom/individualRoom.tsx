@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useRoomContext } from "../../context/RoomContext";
 import { GET_ROOM } from "../../actions/roomActions";
+import { Card, Button, Badge } from "react-bootstrap";
+import { ClipLoader } from "react-spinners";
 
 const IndividualRoomComponent = () => {
   const { id } = useParams();
@@ -13,6 +15,10 @@ const IndividualRoomComponent = () => {
     }
   }, [id, dispatch]);
 
+  if (state.loading) {
+    return <ClipLoader size={50} color="#007bff" />;
+  }
+
   if (!state.currentRoom) {
     return <div>Room not found</div>;
   }
@@ -21,41 +27,41 @@ const IndividualRoomComponent = () => {
 
   return (
     <div className="container mt-4">
-      <div className="card shadow-sm border-0">
-        <img
+      <Card className="shadow-sm border-0">
+        <Card.Img
+          variant="top"
           src={room.room_image}
-          className="card-img-top"
           alt={`Room ${room.number}`}
           style={{ height: "300px", objectFit: "cover" }}
         />
-        <div className="card-body">
-          <h2 className="card-title fw-bold">Room {room.number}</h2>
-          <p className="card-text">
+        <Card.Body>
+          <Card.Title className="fw-bold">Room {room.number}</Card.Title>
+          <Card.Text>
             <span className="fw-semibold">Capacity:</span> {room.capacity}{" "}
-            guests <br />
-            <span className="fw-semibold">Floor:</span> {room.floor} <br />
+            guests
+            <br />
+            <span className="fw-semibold">Floor:</span> {room.floor}
+            <br />
             <span className="fw-semibold">Price:</span> ${room.pricing} per
             night
-          </p>
-          <p className="card-text">
+          </Card.Text>
+          <Card.Text>
             <span className="fw-semibold">Amenities:</span> <br />
-            <span className={`badge ${room.wifi ? "bg-success" : "bg-danger"}`}>
+            <Badge bg={room.wifi ? "success" : "danger"}>
               WiFi {room.wifi ? "Yes" : "No"}
-            </span>{" "}
-            <span
-              className={`badge ${room.parking ? "bg-success" : "bg-danger"}`}
-            >
+            </Badge>{" "}
+            <Badge bg={room.parking ? "success" : "danger"}>
               Parking {room.parking ? "Yes" : "No"}
-            </span>{" "}
-            <span
-              className={`badge ${room.breakfast ? "bg-success" : "bg-danger"}`}
-            >
+            </Badge>{" "}
+            <Badge bg={room.breakfast ? "success" : "danger"}>
               Breakfast {room.breakfast ? "Yes" : "No"}
-            </span>
-          </p>
-          <button className="btn btn-success w-100">Confirm Booking</button>
-        </div>
-      </div>
+            </Badge>
+          </Card.Text>
+          <Button variant="success" className="w-100">
+            Confirm Booking
+          </Button>
+        </Card.Body>
+      </Card>
     </div>
   );
 };

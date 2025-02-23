@@ -43,12 +43,14 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) {
+    const user = localStorage.getItem("user");
+
+    if (token && user) {
       dispatch({
         type: SET_USER,
         payload: {
           token,
-          user: { id: "", name: "", email: "" },
+          user: JSON.parse(user),
         },
       });
     }
@@ -61,7 +63,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
       if (response.status === "Success") {
         localStorage.setItem("token", response.token);
-
+        localStorage.setItem("user", JSON.stringify(response.data));
         dispatch({
           type: SET_USER,
           payload: { user: response.data, token: response.token },
@@ -88,6 +90,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
       if (response.status === "Success") {
         localStorage.setItem("token", response.token);
+        localStorage.setItem("user", JSON.stringify(response.data));
 
         dispatch({
           type: SET_USER,
@@ -105,6 +108,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
     dispatch({ type: LOGOUT });
   };
 
