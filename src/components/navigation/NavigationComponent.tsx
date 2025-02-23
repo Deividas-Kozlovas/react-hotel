@@ -18,7 +18,7 @@ const NavigationComponent = () => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
-            <Nav.Link href="/">Home</Nav.Link>
+            <Nav.Link href="/create-room">Create room</Nav.Link>
             <Nav.Link onClick={handleLogout}>Logout</Nav.Link>{" "}
           </Nav>
         </Navbar.Collapse>

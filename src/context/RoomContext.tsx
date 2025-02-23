@@ -1,8 +1,20 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useEffect, ReactNode } from "react";
-import { SET_ROOMS, RoomState, RoomAction } from "../actions/roomActions";
+import {
+  SET_ROOMS,
+  RoomState,
+  RoomAction,
+  ADD_ROOM,
+} from "../actions/roomActions";
 import roomReducer from "../reducer/roomReducer";
-import { getAllRooms } from "../services/roomService";
+import { getAllRooms, createRoom } from "../services/roomService";
+import { Room } from "../actions/roomActions";
+
+interface RoomContextType {
+  state: RoomState;
+  dispatch: React.Dispatch<RoomAction>;
+  handleCreateRoom: (roomData: Room) => Promise<void>;
+}
 
 const initialState: RoomState = {
   rooms: [],
@@ -11,10 +23,7 @@ const initialState: RoomState = {
   currentRoom: null,
 };
 
-const RoomContext = createContext<{
-  state: typeof initialState;
-  dispatch: React.Dispatch<RoomAction>;
-} | null>(null);
+const RoomContext = createContext<RoomContextType | null>(null);
 
 export const RoomProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = React.useReducer(roomReducer, initialState);
@@ -40,8 +49,21 @@ export const RoomProvider = ({ children }: { children: ReactNode }) => {
     getRooms();
   }, []);
 
+  const handleCreateRoom = async (roomData: Room) => {
+    try {
+      await createRoom(roomData);
+      dispatch({
+        type: ADD_ROOM,
+        payload: roomData,
+      });
+    } catch (error) {
+      console.error("Error creating room", error);
+      throw error;
+    }
+  };
+
   return (
-    <RoomContext.Provider value={{ state, dispatch }}>
+    <RoomContext.Provider value={{ state, dispatch, handleCreateRoom }}>
       {children}
     </RoomContext.Provider>
   );

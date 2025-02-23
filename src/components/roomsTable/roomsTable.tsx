@@ -6,6 +6,8 @@ const RoomCardComponent = () => {
   const { state } = useRoomContext();
   const navigate = useNavigate();
 
+  console.log(state.rooms.length);
+
   if (!state.rooms || state.rooms.length === 0) {
     return (
       <div>

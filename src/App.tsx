@@ -14,6 +14,7 @@ import NavigationComponent from "./components/navigation/NavigationComponent";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { RoomProvider } from "./context/RoomContext";
 import IndividualRoomComponent from "./components/individualRoom/individualRoom";
+import CreateRoom from "./pages/createRoom/CreateRoom";
 
 const App = () => {
   return (
@@ -36,6 +37,7 @@ const App = () => {
               }
             />
             <Route path="/room/:id" element={<IndividualRoomComponent />} />
+            <Route path="/create-room" element={<CreateRoom />} />
           </Routes>
         </Router>
       </RoomProvider>
