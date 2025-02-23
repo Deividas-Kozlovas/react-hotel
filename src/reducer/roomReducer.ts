@@ -8,6 +8,7 @@ import {
   RoomAction,
   SET_ERROR,
   SET_LOADING,
+  SET_AVAILABLE_ROOMS,
 } from "../actions/roomActions";
 
 const initialState: RoomState = {
@@ -63,6 +64,27 @@ const roomReducer = (state = initialState, action: RoomAction): RoomState => {
         error: action.payload,
         loading: false,
       };
+    case SET_AVAILABLE_ROOMS: {
+      const availableRooms = action.payload;
+
+      const updatedRooms = state.rooms.map((room) => {
+        const matchingRoom = availableRooms.find(
+          (availableRoom) => availableRoom.id === room.id
+        );
+
+        if (matchingRoom && matchingRoom.availability) {
+          return { ...room, availability: true };
+        }
+
+        return room;
+      });
+
+      return {
+        ...state,
+        rooms: updatedRooms,
+      };
+    }
+
     default:
       return state;
   }

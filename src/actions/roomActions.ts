@@ -5,6 +5,7 @@ export const UPDATE_ROOM = "UPDATE_ROOM";
 export const DELETE_ROOM = "DELETE_ROOM";
 export const SET_ERROR = "SET_ERROR";
 export const SET_LOADING = "SET_LOADING";
+export const SET_AVAILABLE_ROOMS = "SET_AVAILABLE_ROOMS"; // New action
 
 export interface Room {
   id: string;
@@ -16,6 +17,7 @@ export interface Room {
   wifi: boolean;
   parking: boolean;
   breakfast: boolean;
+  availability: boolean;
 }
 
 export interface RoomState {
@@ -32,4 +34,5 @@ export type RoomAction =
   | { type: typeof DELETE_ROOM; payload: string }
   | { type: typeof SET_ROOMS; payload: Room[] }
   | { type: typeof SET_ERROR; payload: string }
-  | { type: typeof SET_LOADING; payload: boolean };
+  | { type: typeof SET_LOADING; payload: boolean }
+  | { type: typeof SET_AVAILABLE_ROOMS; payload: Room[] };

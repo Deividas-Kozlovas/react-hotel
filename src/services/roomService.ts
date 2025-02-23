@@ -73,3 +73,19 @@ export const createRoom = async (roomData: {
     }
   }
 };
+
+export const checkRoomAvailability = async (
+  checkin: string,
+  checkout: string
+) => {
+  try {
+    const response = await axios.get(
+      `/rooms/availability/checkin/${checkin}/checkout/${checkout}`
+    );
+    return response.data;
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (error) {
+    throw new Error("Error checking room availability");
+  }
+};

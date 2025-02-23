@@ -5,15 +5,17 @@ import {
   RoomState,
   RoomAction,
   ADD_ROOM,
+  SET_AVAILABLE_ROOMS,
   Room,
 } from "../actions/roomActions";
 import roomReducer from "../reducer/roomReducer";
-import { getAllRooms } from "../services/roomService";
+import { getAllRooms, checkRoomAvailability } from "../services/roomService";
 
 interface RoomContextType {
   state: RoomState;
   dispatch: React.Dispatch<RoomAction>;
   handleCreateRoom: (room: Room) => void;
+  checkAvailability: (checkin: string, checkout: string) => void;
 }
 
 const initialState: RoomState = {
@@ -49,6 +51,23 @@ export const RoomProvider = ({ children }: { children: ReactNode }) => {
     getRooms();
   }, []);
 
+  // Handle checking room availability
+  const checkAvailability = async (checkin: string, checkout: string) => {
+    try {
+      const response = await checkRoomAvailability(checkin, checkout);
+      const availableRooms = response.data; // Assuming response data contains the available rooms array
+
+      // Update the rooms with availability
+      dispatch({
+        type: SET_AVAILABLE_ROOMS,
+        payload: availableRooms,
+      });
+      console.log("Available Rooms:", availableRooms);
+    } catch (error) {
+      console.error("Error checking room availability", error);
+    }
+  };
+
   const handleCreateRoom = (room: Room) => {
     dispatch({
       type: ADD_ROOM,
@@ -57,7 +76,9 @@ export const RoomProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <RoomContext.Provider value={{ state, dispatch, handleCreateRoom }}>
+    <RoomContext.Provider
+      value={{ state, dispatch, handleCreateRoom, checkAvailability }}
+    >
       {children}
     </RoomContext.Provider>
   );
