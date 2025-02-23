@@ -6,8 +6,6 @@ const RoomCardComponent = () => {
   const { state } = useRoomContext();
   const navigate = useNavigate();
 
-  console.log(state.rooms.length);
-
   if (!state.rooms || state.rooms.length === 0) {
     return (
       <div>
@@ -23,7 +21,7 @@ const RoomCardComponent = () => {
           <Card className="shadow-sm border-0">
             <Card.Img
               variant="top"
-              src={room.room_image}
+              src={`http://localhost:3000/${room.room_image}`}
               alt={`Room ${room.number}`}
               style={{ height: "200px", objectFit: "cover" }}
             />

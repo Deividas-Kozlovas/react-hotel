@@ -1,104 +1,72 @@
-import { useState } from "react";
-import { Form, Button, Container, Alert } from "react-bootstrap"; // Added Alert for error messages
-import { useRoomContext } from "../../context/RoomContext";
+import React, { useState } from "react";
+import { Form, Button, Container, Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { SET_ERROR } from "../../actions/roomActions";
-
-interface FormData {
-  id: string;
-  number: string;
-  capacity: number;
-  floor: number;
-  room_image: string;
-  pricing: number;
-  wifi: boolean;
-  parking: boolean;
-  breakfast: boolean;
-}
+import { createRoom } from "../../services/roomService";
+import { useRoomContext } from "../../context/RoomContext";
 
 const CreateRoom = () => {
-  const { dispatch, state, handleCreateRoom } = useRoomContext();
-  const navigate = useNavigate();
-
-  const [roomData, setRoomData] = useState<FormData>({
-    id: "",
+  const [roomData, setRoomData] = useState({
     number: "",
     capacity: 1,
     floor: 1,
-    room_image: "",
     pricing: 0,
     wifi: false,
     parking: false,
     breakfast: false,
+    imageFile: null as File | null,
   });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
+
+  const { handleCreateRoom } = useRoomContext();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target;
-    setRoomData((prevState) => ({
-      ...prevState,
-      [name]: type === "checkbox" ? checked : value,
-    }));
+    const { name, value, type, files, checked } = e.target;
+    if (type === "file" && files) {
+      setRoomData((prevState) => ({
+        ...prevState,
+        [name]: files[0],
+      }));
+    } else {
+      setRoomData((prevState) => ({
+        ...prevState,
+        [name]: type === "checkbox" ? checked : value,
+      }));
+    }
   };
 
-  const handleSubmit = async (event: { preventDefault: () => void }) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-
-    dispatch({ type: SET_ERROR, payload: "" });
-
-    if (
-      !roomData.number ||
-      !roomData.room_image ||
-      !roomData.pricing ||
-      !roomData.capacity
-    ) {
-      dispatch({
-        type: SET_ERROR,
-        payload: "Required fields are missing",
-      });
-      return;
-    }
-
-    if (roomData.capacity < 1 || roomData.capacity > 10) {
-      dispatch({
-        type: SET_ERROR,
-        payload: "Capacity must be between 1 and 10",
-      });
-      return;
-    }
-
-    if (roomData.floor < 1 || roomData.floor > 4) {
-      dispatch({
-        type: SET_ERROR,
-        payload: "Floor must be between 1 and 4",
-      });
-      return;
-    }
+    setError("");
+    setLoading(true);
 
     try {
-      await handleCreateRoom(roomData);
-      navigate("/");
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        dispatch({
-          type: SET_ERROR,
-          payload:
-            error.message || "Error creating room. Please try again later.",
-        });
-      } else {
-        dispatch({
-          type: SET_ERROR,
-          payload: "An unexpected error occurred.",
-        });
+      const response = await createRoom(roomData);
+
+      if (response && response.data) {
+        handleCreateRoom(response.data);
       }
+
+      console.log("Room created successfully:", response);
+      navigate("/");
+    } catch (error) {
+      setError(
+        error instanceof Error ? error.message : "An unexpected error occurred."
+      );
+    } finally {
+      setLoading(false);
     }
   };
+
   return (
     <Container className="mt-4">
       <h2>Create a New Room</h2>
 
-      {state.error && (
+      {error && (
         <Alert variant="danger">
-          <strong>Error: </strong> {state.error}
+          <strong>Error: </strong> {error}
         </Alert>
       )}
 
@@ -111,6 +79,7 @@ const CreateRoom = () => {
             value={roomData.number}
             onChange={handleChange}
             placeholder="Enter room number"
+            required
           />
         </Form.Group>
 
@@ -122,6 +91,7 @@ const CreateRoom = () => {
             value={roomData.capacity}
             onChange={handleChange}
             placeholder="Enter room capacity"
+            required
           />
         </Form.Group>
 
@@ -133,17 +103,17 @@ const CreateRoom = () => {
             value={roomData.floor}
             onChange={handleChange}
             placeholder="Enter room floor number"
+            required
           />
         </Form.Group>
 
         <Form.Group controlId="roomImage" className="mb-3">
           <Form.Label>Room Image</Form.Label>
           <Form.Control
-            type="text"
-            name="room_image"
-            value={roomData.room_image}
+            type="file"
+            name="imageFile"
             onChange={handleChange}
-            placeholder="Enter image filename (e.g., room10.jpg)"
+            required
           />
         </Form.Group>
 
@@ -155,6 +125,7 @@ const CreateRoom = () => {
             value={roomData.pricing}
             onChange={handleChange}
             placeholder="Enter room price"
+            required
           />
         </Form.Group>
 
@@ -188,8 +159,13 @@ const CreateRoom = () => {
           />
         </Form.Group>
 
-        <Button variant="primary" type="submit" className="w-100">
-          {state.loading ? "Creating room ..." : "Create Room"}
+        <Button
+          variant="primary"
+          type="submit"
+          className="w-100"
+          disabled={loading}
+        >
+          {loading ? "Creating room..." : "Create Room"}
         </Button>
       </Form>
     </Container>

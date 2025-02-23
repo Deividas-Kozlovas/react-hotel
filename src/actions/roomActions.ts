@@ -32,4 +32,4 @@ export type RoomAction =
   | { type: typeof DELETE_ROOM; payload: string }
   | { type: typeof SET_ROOMS; payload: Room[] }
   | { type: typeof SET_ERROR; payload: string }
-  | { type: typeof SET_LOADING };
+  | { type: typeof SET_LOADING; payload: boolean };

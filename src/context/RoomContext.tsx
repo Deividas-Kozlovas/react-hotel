@@ -5,15 +5,15 @@ import {
   RoomState,
   RoomAction,
   ADD_ROOM,
+  Room,
 } from "../actions/roomActions";
 import roomReducer from "../reducer/roomReducer";
-import { getAllRooms, createRoom } from "../services/roomService";
-import { Room } from "../actions/roomActions";
+import { getAllRooms } from "../services/roomService";
 
 interface RoomContextType {
   state: RoomState;
   dispatch: React.Dispatch<RoomAction>;
-  handleCreateRoom: (roomData: Room) => Promise<void>;
+  handleCreateRoom: (room: Room) => void;
 }
 
 const initialState: RoomState = {
@@ -49,17 +49,11 @@ export const RoomProvider = ({ children }: { children: ReactNode }) => {
     getRooms();
   }, []);
 
-  const handleCreateRoom = async (roomData: Room) => {
-    try {
-      await createRoom(roomData);
-      dispatch({
-        type: ADD_ROOM,
-        payload: roomData,
-      });
-    } catch (error) {
-      console.error("Error creating room", error);
-      throw error;
-    }
+  const handleCreateRoom = (room: Room) => {
+    dispatch({
+      type: ADD_ROOM,
+      payload: room,
+    });
   };
 
   return (

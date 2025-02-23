@@ -30,7 +30,7 @@ const IndividualRoomComponent = () => {
       <Card className="shadow-sm border-0">
         <Card.Img
           variant="top"
-          src={room.room_image}
+          src={`http://localhost:3000/${room.room_image}`}
           alt={`Room ${room.number}`}
           style={{ height: "300px", objectFit: "cover" }}
         />
