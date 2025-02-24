@@ -15,33 +15,38 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { RoomProvider } from "./context/RoomContext";
 import IndividualRoomComponent from "./components/individualRoom/individualRoom";
 import CreateRoom from "./pages/createRoom/CreateRoom";
+import { ReservationProvider } from "./context/ReservationContext";
 
 const App = () => {
   return (
-    <UserProvider>
-      <RoomProvider>
-        <Router>
-          <NavigationWithVisibility />
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route
-              path="/register"
-              element={
-                <RegisterLoginPage RegisterLoginForm={RegisterFormComponent} />
-              }
-            />
-            <Route
-              path="/login"
-              element={
-                <RegisterLoginPage RegisterLoginForm={LoginFormComponent} />
-              }
-            />
-            <Route path="/room/:id" element={<IndividualRoomComponent />} />
-            <Route path="/create-room" element={<CreateRoom />} />
-          </Routes>
-        </Router>
-      </RoomProvider>
-    </UserProvider>
+    <ReservationProvider>
+      <UserProvider>
+        <RoomProvider>
+          <Router>
+            <NavigationWithVisibility />
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route
+                path="/register"
+                element={
+                  <RegisterLoginPage
+                    RegisterLoginForm={RegisterFormComponent}
+                  />
+                }
+              />
+              <Route
+                path="/login"
+                element={
+                  <RegisterLoginPage RegisterLoginForm={LoginFormComponent} />
+                }
+              />
+              <Route path="/room/:id" element={<IndividualRoomComponent />} />
+              <Route path="/create-room" element={<CreateRoom />} />
+            </Routes>
+          </Router>
+        </RoomProvider>
+      </UserProvider>
+    </ReservationProvider>
   );
 };
 
