@@ -9,6 +9,7 @@ export interface Reservation {
   name: string;
   address: string;
   city: string;
+  zip: string;
   country: string;
   checkin: string;
   checkout: string;

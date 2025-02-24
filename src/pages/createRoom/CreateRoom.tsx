@@ -3,6 +3,7 @@ import { Form, Button, Container, Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { createRoom } from "../../services/roomService";
 import { useRoomContext } from "../../context/RoomContext";
+import { ClipLoader } from "react-spinners"; // Import the loader
 
 const CreateRoom = () => {
   const [roomData, setRoomData] = useState({
@@ -165,7 +166,14 @@ const CreateRoom = () => {
           className="w-100"
           disabled={loading}
         >
-          {loading ? "Creating room..." : "Create Room"}
+          {loading ? (
+            <>
+              <ClipLoader size={20} color={"#fff"} loading={true} />
+              {" Creating room..."}
+            </>
+          ) : (
+            "Create Room"
+          )}
         </Button>
       </Form>
     </Container>

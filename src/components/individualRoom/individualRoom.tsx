@@ -4,6 +4,7 @@ import { useRoomContext } from "../../context/RoomContext";
 import { GET_ROOM } from "../../actions/roomActions";
 import { Card, Button, Badge } from "react-bootstrap";
 import { ClipLoader } from "react-spinners";
+import ReservationFormComponent from "../forms/reservationFormComponent/reservationFormComponent";
 
 const IndividualRoomComponent = () => {
   const { id } = useParams();
@@ -62,6 +63,7 @@ const IndividualRoomComponent = () => {
           </Button>
         </Card.Body>
       </Card>
+      <ReservationFormComponent room_id={id ?? ""} />
     </div>
   );
 };
