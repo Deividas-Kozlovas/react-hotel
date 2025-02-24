@@ -56,7 +56,7 @@ const roomReducer = (state = initialState, action: RoomAction): RoomState => {
     case SET_LOADING:
       return {
         ...state,
-        loading: true,
+        loading: action.payload,
       };
     case SET_ERROR:
       return {
@@ -67,16 +67,17 @@ const roomReducer = (state = initialState, action: RoomAction): RoomState => {
     case SET_AVAILABLE_ROOMS: {
       const availableRooms = action.payload;
 
-      const updatedRooms = state.rooms.map((room) => {
+      console.log(
+        `Available Rooms: ${JSON.stringify(availableRooms, null, 2)}`
+      );
+      console.log(`Room State: ${JSON.stringify(state.rooms, null, 2)}`);
+
+      const updatedRooms = state.rooms.filter((room) => {
         const matchingRoom = availableRooms.find(
           (availableRoom) => availableRoom.id === room.id
         );
 
-        if (matchingRoom && matchingRoom.availability) {
-          return { ...room, availability: true };
-        }
-
-        return room;
+        return matchingRoom ? matchingRoom.availability : true;
       });
 
       return {

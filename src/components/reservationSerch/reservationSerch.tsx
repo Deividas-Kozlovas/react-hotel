@@ -29,10 +29,19 @@ const ReservationSearch = () => {
       return;
     }
 
+    const checkinDate = new Date(checkin);
+    const checkoutDate = new Date(checkout);
+
+    if (checkoutDate < checkinDate) {
+      setError("Check-out date cannot be earlier than check-in date.");
+      setLoading(false);
+      return;
+    }
+
     try {
       await checkAvailability(checkin, checkout);
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
+      console.error(error);
       setError("An error occurred while checking room availability.");
     } finally {
       setLoading(false);
@@ -43,11 +52,7 @@ const ReservationSearch = () => {
     <Container className="mt-4">
       <h2>Check Room Availability</h2>
 
-      {error && (
-        <Alert variant="danger">
-          <strong>Error: </strong> {error}
-        </Alert>
-      )}
+      {error && <Alert variant="danger">{error}</Alert>}
 
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId="checkin" className="mb-3">

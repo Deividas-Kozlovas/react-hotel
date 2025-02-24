@@ -10,6 +10,7 @@ import {
 } from "../actions/roomActions";
 import roomReducer from "../reducer/roomReducer";
 import { getAllRooms, checkRoomAvailability } from "../services/roomService";
+import { SET_LOADING } from "../actions/userActions";
 
 interface RoomContextType {
   state: RoomState;
@@ -33,31 +34,33 @@ export const RoomProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const getRooms = async () => {
       try {
+        dispatch({ type: SET_LOADING, payload: true });
+
         const rooms = await getAllRooms();
         const roomsWithId = rooms.data.map((room: { _id: string }) => ({
           ...room,
           id: room._id,
         }));
 
+        dispatch({ type: SET_LOADING, payload: false });
         dispatch({
           type: SET_ROOMS,
           payload: roomsWithId,
         });
       } catch (error) {
         console.error("Error fetching rooms", error);
+        dispatch({ type: SET_LOADING, payload: false });
       }
     };
 
     getRooms();
-  }, []);
+  }, [dispatch]);
 
-  // Handle checking room availability
   const checkAvailability = async (checkin: string, checkout: string) => {
     try {
       const response = await checkRoomAvailability(checkin, checkout);
-      const availableRooms = response.data; // Assuming response data contains the available rooms array
+      const availableRooms = response.data;
 
-      // Update the rooms with availability
       dispatch({
         type: SET_AVAILABLE_ROOMS,
         payload: availableRooms,
