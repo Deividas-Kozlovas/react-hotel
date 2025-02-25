@@ -61,7 +61,6 @@ export const createRoom = async (roomData: {
         "Content-Type": "multipart/form-data",
       },
     });
-    console.log("Room creation response:", response);
     return response.data;
   } catch (error) {
     if (isAxiosError(error)) {

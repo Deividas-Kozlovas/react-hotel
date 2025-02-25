@@ -67,11 +67,6 @@ const roomReducer = (state = initialState, action: RoomAction): RoomState => {
     case SET_AVAILABLE_ROOMS: {
       const availableRooms = action.payload;
 
-      console.log(
-        `Available Rooms: ${JSON.stringify(availableRooms, null, 2)}`
-      );
-      console.log(`Room State: ${JSON.stringify(state.rooms, null, 2)}`);
-
       const updatedRooms = state.rooms.filter((room) => {
         const matchingRoom = availableRooms.find(
           (availableRoom) => availableRoom.id === room.id

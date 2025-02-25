@@ -17,6 +17,7 @@ interface RoomContextType {
   dispatch: React.Dispatch<RoomAction>;
   handleCreateRoom: (room: Room) => void;
   checkAvailability: (checkin: string, checkout: string) => void;
+  getRooms: () => void;
 }
 
 const initialState: RoomState = {
@@ -32,29 +33,29 @@ export const RoomProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = React.useReducer(roomReducer, initialState);
 
   useEffect(() => {
-    const getRooms = async () => {
-      try {
-        dispatch({ type: SET_LOADING, payload: true });
-
-        const rooms = await getAllRooms();
-        const roomsWithId = rooms.data.map((room: { _id: string }) => ({
-          ...room,
-          id: room._id,
-        }));
-
-        dispatch({ type: SET_LOADING, payload: false });
-        dispatch({
-          type: SET_ROOMS,
-          payload: roomsWithId,
-        });
-      } catch (error) {
-        console.error("Error fetching rooms", error);
-        dispatch({ type: SET_LOADING, payload: false });
-      }
-    };
-
     getRooms();
   }, [dispatch]);
+
+  const getRooms = async () => {
+    try {
+      dispatch({ type: SET_LOADING, payload: true });
+
+      const rooms = await getAllRooms();
+      const roomsWithId = rooms.data.map((room: { _id: string }) => ({
+        ...room,
+        id: room._id,
+      }));
+
+      dispatch({ type: SET_LOADING, payload: false });
+      dispatch({
+        type: SET_ROOMS,
+        payload: roomsWithId,
+      });
+    } catch (error) {
+      console.error("Error fetching rooms", error);
+      dispatch({ type: SET_LOADING, payload: false });
+    }
+  };
 
   const checkAvailability = async (checkin: string, checkout: string) => {
     try {
@@ -80,7 +81,7 @@ export const RoomProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <RoomContext.Provider
-      value={{ state, dispatch, handleCreateRoom, checkAvailability }}
+      value={{ state, dispatch, getRooms, handleCreateRoom, checkAvailability }}
     >
       {children}
     </RoomContext.Provider>

@@ -7,8 +7,6 @@ const RoomCardComponent = () => {
   const { state } = useRoomContext();
   const navigate = useNavigate();
 
-  console.log("Loading state:", state.loading);
-
   return (
     <Container>
       <Row className="g-4 pt-5">

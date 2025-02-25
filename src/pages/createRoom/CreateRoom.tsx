@@ -50,7 +50,6 @@ const CreateRoom = () => {
         handleCreateRoom(response.data);
       }
 
-      console.log("Room created successfully:", response);
       navigate("/");
     } catch (error) {
       setError(
